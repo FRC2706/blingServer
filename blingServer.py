@@ -74,6 +74,7 @@ def doBling(data):
     def rainbow(strip, wait_ms=20, iterations=1):
         """Draw rainbow that fades across all pixels at once."""
         for j in range(256*iterations):
+
             for i in range(strip.numPixels()):
                 strip.setPixelColor(i, wheel((i+j) & 255))
             strip.show()
@@ -127,7 +128,9 @@ def doBling(data):
         rainbow(strip)
     elif command == "theaterChaseRainbow":
         theaterChaseRainbow(strip)
-
+    elif command == "wheel":
+        wheel(strip)
+    elif command 
     clear()
 
     logger.debug("Terminating")
