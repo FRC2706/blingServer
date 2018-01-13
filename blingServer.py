@@ -129,8 +129,7 @@ def doBling(data):
     elif command == "theaterChaseRainbow":
         theaterChaseRainbow(strip)
     elif command == "wheel":
-        wheel(strip)
-    elif command 
+        wheel(pos)
     clear()
 
     logger.debug("Terminating")
