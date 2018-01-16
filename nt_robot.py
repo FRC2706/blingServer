@@ -29,9 +29,12 @@ while True:
     parms = input("Enter command color: ")
     command=parms.split()[0]
     color=parms.split()[1]
-    
+    repeat=parms.split()[2]
+
     print("Command: %s" % command)
     print("Color:   %s" % color)
+    print("Repeat:  ", repeat)
 
     sd.putString('command', command)
     sd.putString('color', color)
+    sd.putNumber('repeat', repeat)
