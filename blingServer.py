@@ -49,7 +49,7 @@ def doBling(data):
             strip.show()
             time.sleep(wait_ms/1000.0)
 
-    def theaterChase(strip, color, wait_ms=50, iterations):
+    def theaterChase(strip, color, iterations, wait_ms=50):
         """Movie theater light style chaser animation."""
         for j in range(iterations):
             for q in range(3):
@@ -110,7 +110,8 @@ def doBling(data):
     # Real work goes here
     command=data[0]
     colorString=data[1]
-
+    repeat=data[2]
+	
     if colorString == "red":
         color=Color(255, 0, 0)
     elif colorString == "green":
@@ -119,18 +120,21 @@ def doBling(data):
         color=Color(0, 0, 255)
     else:
         color=Color(32,32,32)
+ 
+    iterations=int(repeat)
 
     if command == "colorWipe":
         colorWipe(strip, color)  # Red wipe
     elif command == "theaterChase":
-        theaterChase(strip, color)
+        theaterChase(strip, color, iterations)
     elif command == "rainbow":
         rainbow(strip)
     elif command == "theaterChaseRainbow":
         theaterChaseRainbow(strip)
     elif command == "rainbowCycle":
         rainbowCycle(strip)
-
+   
+    
     clear()
 
     logger.debug("Terminating")
@@ -148,6 +152,8 @@ def handleBlingRequest(table, key, value, isNew):
 
     command = value
     color = sd.getString("color")
+    iterations = sd.getNumber('repeat')
+
     data = (command, color, iterations)
 
     # Feedback to the roboRIO plus it means we will see a repeat of the previous
