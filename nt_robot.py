@@ -31,11 +31,11 @@ while True:
    # color=parms.split()[1]
    # repeat=parms.split()[2]
 
-    command,color,repeat=parms.split(",")
+    color,repeat,command=parms.split(",")
     print("Command: %s" % command)
     print("Color:   %s" % color)
     print("Repeat:    ",  repeat)
 
-    sd.putString('command', command)
     sd.putString('color', color)
     sd.putNumber('repeat', repeat)
+    sd.putString('command', command)
