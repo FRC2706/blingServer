@@ -27,13 +27,14 @@ sd = NetworkTables.getTable("blingTable")
 
 while True:
     parms = input("Enter command color: ")
-    command=parms.split()[0]
-    color=parms.split()[1]
-    repeat=parms.split()[2]
+    #command=parms.split()[0]
+   # color=parms.split()[1]
+   # repeat=parms.split()[2]
 
+    command,color,repeat=parms.split(",")
     print("Command: %s" % command)
     print("Color:   %s" % color)
-    print("Repeat:  ", repeat)
+    print("Repeat:    ",  repeat)
 
     sd.putString('command', command)
     sd.putString('color', color)
