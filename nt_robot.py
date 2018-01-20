@@ -31,14 +31,16 @@ while True:
    # color=parms.split()[1]
    # repeat=parms.split()[2]\
 	
-    color,repeat,wait_ms,command=parms.split(",")
+    color,repeat,wait_ms,LED_BRIGHTNESS,command=parms.split(",")
     print("Command: %s" % command)
     print("Color:   %s" % color)
     print("Repeat:  %s",  repeat)
     print("wait_ms:    %s", wait_ms)
+    print("LED_BRIGHTNESS %s", LED_BRIGHTNESS)
 
     sd.putString('color', color)
     sd.putNumber('repeat', repeat)
     sd.putNumber('wait_ms', wait_ms)
+    sd.putNumber('LED_BRIGHTNESS', LED_BRIGHTNESS)
     sd.putString('command', command)
-
+ 
