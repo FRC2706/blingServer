@@ -135,7 +135,8 @@ def doBling(data):
         theaterChaseRainbow(strip, iterations, wait_ms)
     elif command == "rainbowCycle":
         rainbowCycle(strip, iterations, wait_ms)
-   
+    elif command == "clear":
+	clear()    
     
     clear()
 
