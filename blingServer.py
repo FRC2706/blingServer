@@ -42,14 +42,14 @@ def doBling(data):
         clear()
         sys.exit(0)
 
-    def colorWipe(strip, color, wait_ms=50):
+    def colorWipe(strip, color, iterations, wait_ms):
         """Wipe color across display a pixel at a time."""
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, color)
             strip.show()
             time.sleep(wait_ms/1000.0)
 
-    def theaterChase(strip, color, iterations, wait_ms=50):
+    def theaterChase(strip, color, iterations, wait_ms):
         """Movie theater light style chaser animation."""
         for j in range(iterations):
             for q in range(3):
@@ -60,7 +60,7 @@ def doBling(data):
                 for i in range(0, strip.numPixels(), 3):
                     strip.setPixelColor(i+q, 0)
 
-    def rainbow(strip, wait_ms=20, iterations=1):
+    def rainbow(strip, wait_ms, iterations):
         """Draw rainbow that fades across all pixels at once."""
         for j in range(256*iterations):
             for i in range(strip.numPixels()):
@@ -80,7 +80,7 @@ def doBling(data):
             return Color(0, pos * 3, 255 - pos * 3)
 
 
-    def rainbowCycle(strip, wait_ms=20, iterations=5):
+    def rainbowCycle(strip, wait_ms, iterations):
         """ Draw rainbow that uniformly distributes itself across all pixels."""
         for j in range(256*iterations):
             for i in range(strip.numPixels()):
@@ -88,9 +88,9 @@ def doBling(data):
             strip.show()
             time.sleep(wait_ms/1000.0)
 
-    def theaterChaseRainbow(strip, wait_ms=50):
+    def theaterChaseRainbow(strip, iterations, wait_ms):
         """Rainbow movie theater light style chaser animation."""
-        for j in range(256):
+        for j in range(256*iterations):
             for q in range(3):
                 for i in range(0, strip.numPixels(), 3):
                     strip.setPixelColor(i+q, wheel((i+j) % 255))
@@ -111,6 +111,7 @@ def doBling(data):
     command=data[0]
     colorString=data[1]
     repeat=data[2]
+    wait_ms=data[3]
 	
     if colorString == "red":
         color=Color(255, 0, 0)
@@ -122,17 +123,18 @@ def doBling(data):
         color=Color(32,32,32)
  
     iterations=int(repeat)
+    wait_ms=int(wait_ms)
 
     if command == "colorWipe":
-        colorWipe(strip, color)  # Red wipe
+        colorWipe(strip, color, iterations, wait_ms)  # Red wipe
     elif command == "theaterChase":
-        theaterChase(strip, color, iterations)
+        theaterChase(strip, color, iterations, wait_ms)
     elif command == "rainbow":
-        rainbow(strip)
+        rainbow(strip, iterations, wait_ms)
     elif command == "theaterChaseRainbow":
-        theaterChaseRainbow(strip)
+        theaterChaseRainbow(strip, iterations, wait_ms)
     elif command == "rainbowCycle":
-        rainbowCycle(strip)
+        rainbowCycle(strip, iterations, wait_ms)
    
     
     clear()
@@ -153,8 +155,9 @@ def handleBlingRequest(table, key, value, isNew):
     command = value
     color = sd.getString("color")
     iterations = sd.getNumber('repeat')
+    wait_ms = sd.getNumber('wait_ms')    
 
-    data = (command, color, iterations)
+    data = (command, color, iterations, wait_ms)
 
     # Feedback to the roboRIO plus it means we will see a repeat of the previous
     # command as a change
