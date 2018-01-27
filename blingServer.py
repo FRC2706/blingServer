@@ -42,15 +42,19 @@ def doBling(data):
         clear()
         sys.exit(0)
 
-    def colorWipe(strip, color, iterations, wait_ms):
+    def colorWipe(strip, color, iterations, wait_ms, LED_BRIGHTNESS):
+        strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+        strip.begin()
         """Wipe color across display a pixel at a time."""
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, color)
             strip.show()
             time.sleep(wait_ms/1000.0)
 
-    def theaterChase(strip, color, iterations, wait_ms):
-        """Movie theater light style chaser animation."""
+    def theaterChase(strip, color, iterations, wait_ms, LED_BRIGHTNESS):
+        strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+        strip.begin()
+	"""Movie theater light style chaser animation."""
         for j in range(iterations):
             for q in range(3):
                 for i in range(0, strip.numPixels(), 3):
@@ -60,8 +64,10 @@ def doBling(data):
                 for i in range(0, strip.numPixels(), 3):
                     strip.setPixelColor(i+q, 0)
 
-    def rainbow(strip, wait_ms, iterations):
-        """Draw rainbow that fades across all pixels at once."""
+    def rainbow(strip, wait_ms, iterations, LED_BRIGHTNESS):
+        strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+        strip.begin() 
+	"""Draw rainbow that fades across all pixels at once."""
         for j in range(256*iterations):
             for i in range(strip.numPixels()):
                 strip.setPixelColor(i, wheel((i+j) & 255))
@@ -80,16 +86,20 @@ def doBling(data):
             return Color(0, pos * 3, 255 - pos * 3)
 
 
-    def rainbowCycle(strip, wait_ms, iterations):
-        """ Draw rainbow that uniformly distributes itself across all pixels."""
+    def rainbowCycle(strip, wait_ms, iterations, LED_BRIGHTNESS):
+        strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+        strip.begin()  
+	""" Draw rainbow that uniformly distributes itself across all pixels."""
         for j in range(256*iterations):
             for i in range(strip.numPixels()):
                 strip.setPixelColor(i, wheel((int(i * 256 / strip.numPixels()) + j) & 255))
             strip.show()
             time.sleep(wait_ms/1000.0)
 
-    def theaterChaseRainbow(strip, iterations, wait_ms):
-        """Rainbow movie theater light style chaser animation."""
+    def theaterChaseRainbow(strip, iterations, wait_ms, LED_BRIGHTNESS):
+        strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+        strip.begin() 
+	"""Rainbow movie theater light style chaser animation."""
         for j in range(256*iterations):
             for q in range(3):
                 for i in range(0, strip.numPixels(), 3):
@@ -112,6 +122,7 @@ def doBling(data):
     colorString=data[1]
     repeat=data[2]
     wait_ms=data[3]
+    LED_BRIGHTNESS=data[4]
 	
     if colorString == "red":
         color=Color(255, 0, 0)
@@ -124,17 +135,18 @@ def doBling(data):
  
     iterations=int(repeat)
     wait_ms=int(wait_ms)
+    LED_BRIGHTNESS=int(LED_BRIGHTNESS)
 
     if command == "colorWipe":
-        colorWipe(strip, color, iterations, wait_ms)  # Red wipe
+        colorWipe(strip, color, iterations, wait_ms, LED_BRIGHTNESS)  # Red wipe
     elif command == "theaterChase":
-        theaterChase(strip, color, iterations, wait_ms)
+        theaterChase(strip, color, iterations, wait_ms, LED_BRIGHTNESS)
     elif command == "rainbow":
-        rainbow(strip, iterations, wait_ms)
+        rainbow(strip, iterations, wait_ms, LED_BRIGHTNESS)
     elif command == "theaterChaseRainbow":
-        theaterChaseRainbow(strip, iterations, wait_ms)
+        theaterChaseRainbow(strip, iterations, wait_ms, LED_BRIGHTNESS)
     elif command == "rainbowCycle":
-        rainbowCycle(strip, iterations, wait_ms)
+        rainbowCycle(strip, iterations, wait_ms, LED_BRIGHTNESS)
     elif command == "clear":
 	clear()    
     
@@ -157,8 +169,9 @@ def handleBlingRequest(table, key, value, isNew):
     color = sd.getString("color")
     iterations = sd.getNumber('repeat')
     wait_ms = sd.getNumber('wait_ms')    
+    LED_BRIGHTNESS = sd.getNumber('LED_BRIGHTNESS')     
 
-    data = (command, color, iterations, wait_ms)
+    data = (command, color, iterations, wait_ms, LED_BRIGHTNESS)
 
     # Feedback to the roboRIO plus it means we will see a repeat of the previous
     # command as a change
