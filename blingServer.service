@@ -3,10 +3,8 @@ Description=blingServer service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 -u /home/pi/Documents/bling/blingServer/blingServer.py
-WorkingDirectory=/home/pi/Documents/kjames/blingServer
-Restart=always
-User=pi
+ExecStart=/usr/bin/python /home/pi/Documents/bling/blingServer/blingServer.py
+WorkingDirectory=/home/pi/Documents/bling/blingServer/
 
 [Install]
 WantedBy=multi-user.target
