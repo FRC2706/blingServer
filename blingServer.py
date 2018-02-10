@@ -201,7 +201,7 @@ def doBling(data):
     Green=int(green)
     Blue=int(blue)
 
-    color=Color(red,green,Blue)
+    color=Color(Red,Green,Blue)
     #color=Color(int(red),int(green),int(blue))
     #color=Color(red,green,blue)
 
