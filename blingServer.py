@@ -44,10 +44,10 @@ def doBling(data):
     def sig_term_handler(signal,frame):
         logger.debug("Received SIGTERM")
         clear()
-        sys.exit(0) 
+        sys.exit(0)
 
     def wheel(pos):
-        """Generate rainbow colors across 0-255 positions."""       
+        """Generate rainbow colors across 0-255 positions."""
         if pos < 85:
             return Color(pos * 3, 255 - pos * 3, 0)
         elif pos < 170:
@@ -81,7 +81,7 @@ def doBling(data):
         time.sleep(wait_ms/1000)
 
         clear()
-    
+
     def blink(strip ,color, wait_ms, iterations, brightness):
         """Blink all the LEDs on and off at the same time"""
 
@@ -95,11 +95,11 @@ def doBling(data):
             time.sleep(wait_ms/1000.0)
 
             for i in range(strip.numPixels()):
-                strip.setPixelColor(i, 0)  
+                strip.setPixelColor(i, 0)
 
             strip.show()
-            time.sleep(wait_ms/1000.0) 
-     
+            time.sleep(wait_ms/1000.0)
+
     def colorWipe(strip, color, iterations, wait_ms, brightness):
         """Wipe color across display a pixel at a time."""
 
@@ -188,20 +188,29 @@ def doBling(data):
 
     # Real work goes here
     command=data[0]
-    colorString=data[1]
-    repeat=data[2]
-    wait_ms=data[3]
-    LED_BRIGHTNESS=data[4]
-	
-    if colorString == "red":
-        color=Color(255, 0, 0)
-    elif colorString == "green":
-        color=Color(0, 255, 0)
-    elif colorString == "blue":
-        color=Color(0, 0, 255)
-    else:
-        color=Color(32,32,32)
- 
+
+    red=data[1]
+    green=data[2]
+    blue=data[3]
+    repeat=data[4]
+    wait_ms=data[5]
+    LED_BRIGHTNESS=data[6]
+
+
+    Red=int(red)
+    Green=int(green)
+    Blue=int(blue)
+
+    color=Color(red,green,Blue)
+    #color=Color(int(red),int(green),int(blue))
+    #color=Color(red,green,blue)
+
+    #RBG=int(255)
+    #color=Color(0,RBG,0)
+
+    #GREEN=int(green)
+    #color=Color(0,GREEN,0)
+
     iterations=int(repeat)
     wait_ms=int(wait_ms)
     LED_BRIGHTNESS=int(LED_BRIGHTNESS)
@@ -209,9 +218,9 @@ def doBling(data):
     if command == "colorWipe":
         colorWipe(strip, color, iterations, wait_ms, LED_BRIGHTNESS)  # Red wipe
     elif command == "solid":
-        solid(strip, color, wait_ms, iterations, LED_BRIGHTNESS) 
+        solid(strip, color, wait_ms, iterations, LED_BRIGHTNESS)
     elif command == "blink":
-        blink(strip, color, wait_ms, iterations, LED_BRIGHTNESS) 
+        blink(strip, color, wait_ms, iterations, LED_BRIGHTNESS)
     elif command == "theaterChase":
         theaterChase(strip, color, iterations, wait_ms, LED_BRIGHTNESS)
     elif command == "rainbow":
@@ -221,8 +230,8 @@ def doBling(data):
     elif command == "rainbowCycle":
         rainbowCycle(strip, iterations, wait_ms, LED_BRIGHTNESS)
     elif command == "clear":
-	clear()    
-    
+	clear()
+
 #   clear()
 
     logger.debug("Terminating")
@@ -239,18 +248,21 @@ def handleBlingRequest(table, key, value, isNew):
     logger = logging.getLogger("handleBlingRequest")
 
     command = value
-    color = sd.getString("color", "")
+   # color = sd.getString("color", "")
+    red = sd.getNumber('red', int)
+    green = sd.getNumber('green', int)
+    blue = sd.getNumber('blue', int)
     iterations = sd.getNumber('repeat', int)
-    wait_ms = sd.getNumber('wait_ms', int)    
-    LED_BRIGHTNESS = sd.getNumber('LED_BRIGHTNESS', int)     
+    wait_ms = sd.getNumber('wait_ms', int)
+    LED_BRIGHTNESS = sd.getNumber('LED_BRIGHTNESS', int)
 
-    data = (command, color, iterations, wait_ms, LED_BRIGHTNESS)
+    data = (command, red, green, blue, iterations, wait_ms, LED_BRIGHTNESS)
 
     # Feedback to the roboRIO plus it means we will see a repeat of the previous
     # command as a change
     sd.putString("command", "received")
 
-    logger.debug("handling %r %r" % (command, color))
+   # logger.debug("handling %r %r" % (command, color))
 
     if process and process.is_alive():
         logger.debug("terminating doBling process")
@@ -263,8 +275,8 @@ def handleBlingRequest(table, key, value, isNew):
     process = multiprocessing.Process(target=doBling, args=(data,))
     process.daemon = True
     process.start()
-        
-    logger.debug("ending %r %r" % (command, color))
+
+   # logger.debug("ending %r %r" % (command, color))
 
     # Let the roboRIO know we are done
     sd.putString("command", "processed")
