@@ -240,12 +240,14 @@ def handleBlingRequest(table, key, value, isNew):
     global process
 
     command = value
-    red = sd.getNumber('red', int)
-    green = sd.getNumber('green', int)
-    blue = sd.getNumber('blue', int)
-    iterations = sd.getNumber('repeat', int)
-    wait_ms = sd.getNumber('wait_ms', int)
-    LED_BRIGHTNESS = sd.getNumber('LED_BRIGHTNESS', int)
+
+    # Default colors make a grey that should be obvious
+    red = sd.getNumber('red', 32)
+    green = sd.getNumber('green', 32)
+    blue = sd.getNumber('blue', 32)
+    iterations = sd.getNumber('repeat', 1)
+    wait_ms = sd.getNumber('wait_ms', 50)
+    LED_BRIGHTNESS = sd.getNumber('LED_BRIGHTNESS', 64)
 
     data = (command, red, green, blue, iterations, wait_ms, LED_BRIGHTNESS)
 
