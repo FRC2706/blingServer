@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--server", help="The networktables server address",
                                       default='127.0.0.1')
 logging.basicConfig(\
+    filename='/var/log/bling',
     format='%(asctime)s.%(msecs)03d %(levelname)s:%(message)s',\
     datefmt='%H:%M:%S',\
     level=logging.DEBUG)
@@ -50,7 +51,7 @@ def doBling(data):
     import signal
 
     def sig_term_handler(signal,frame):
-        logger.debug("Received SIGTERM")
+        logger.debug("doBling: Received SIGTERM")
         clear()
         sys.exit(0)
 
@@ -189,10 +190,7 @@ def doBling(data):
 
     process = multiprocessing.current_process()
 
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger("doBling (%r PID %r)" % (process.name, process.pid,))
-
-    logger.debug("Received data %r", data)
+    logger.debug("doBling (%r): received data %r" %(process.pid, data))
 
     # Real work goes here
     command=data[0]
@@ -204,20 +202,11 @@ def doBling(data):
     wait_ms=data[5]
     LED_BRIGHTNESS=data[6]
 
-
     Red=int(red)
     Green=int(green)
     Blue=int(blue)
 
     color=Color(Red,Green,Blue)
-    #color=Color(int(red),int(green),int(blue))
-    #color=Color(red,green,blue)
-
-    #RBG=int(255)
-    #color=Color(0,RBG,0)
-
-    #GREEN=int(green)
-    #color=Color(0,GREEN,0)
 
     iterations=int(repeat)
     wait_ms=int(wait_ms)
@@ -240,9 +229,7 @@ def doBling(data):
     elif command == "clear":
 	clear()
 
-#   clear()
-
-    logger.debug("Terminating")
+    logger.debug("doBling (%r): terminating" % process.pid)
 
 
 def connectionListener(connected, info):
@@ -252,11 +239,7 @@ def handleBlingRequest(table, key, value, isNew):
     import logging
     global process
 
-    logging.basicConfig(level=logging.DEBUG)
-    logger = logging.getLogger("handleBlingRequest")
-
     command = value
-   # color = sd.getString("color", "")
     red = sd.getNumber('red', int)
     green = sd.getNumber('green', int)
     blue = sd.getNumber('blue', int)
@@ -273,13 +256,10 @@ def handleBlingRequest(table, key, value, isNew):
    # logger.debug("handling %r %r" % (command, color))
 
     if process and process.is_alive():
-        logger.debug("terminating doBling process")
+        logger.debug("handleBlingRequest: terminating doBling process")
         process.terminate()
         process.join()
 
-#   if command == "clear":
-#       logger.debug("got clear command")
-#   else:
     process = multiprocessing.Process(target=doBling, args=(data,))
     process.daemon = True
     process.start()
@@ -291,9 +271,10 @@ def handleBlingRequest(table, key, value, isNew):
 
 if __name__ == "__main__":
 
-    #ip = "roboRIO-2706-FRC.local"
     ip = args.server
-    logger.info("ip = %s" % ip)
+
+    logger.info("main: ip = %s" % ip)
+
     NetworkTables.initialize(server=ip)
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
     sd = NetworkTables.getTable("blingTable")
