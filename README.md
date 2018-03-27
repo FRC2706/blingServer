@@ -5,3 +5,12 @@
 # systemctl stop blingServer.service
 # systemctl list-units blingServer.service
 # systemctl status blingServer.service
+
+Patterns:
+colorWipe
+solid (wait=0 for endless display)
+blink
+theaterChase
+rainbow
+theaterChaseRainbow
+rainbowCycle

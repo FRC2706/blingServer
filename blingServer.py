@@ -46,6 +46,10 @@ strip = Adafruit_NeoPixel(args.length, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT
 # Intialize the library (must be called once before other functions).
 strip.begin()
 
+for i in range(strip.numPixels()):
+    strip.setPixelColor(i, 0)
+strip.show()
+
 def doBling(data):
     import logging
     import signal
