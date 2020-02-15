@@ -41,7 +41,7 @@ def get_integer(var_name, default_value, min_value, max_value):
 
     while True:
         try:
-            tmp = raw_input("Enter %s value [%d]: " % (var_name, default_value))
+            tmp = input("Enter %s value [%d]: " % (var_name, default_value))
             if tmp == '':
                 return default_value
             if not tmp.isdigit():
@@ -65,7 +65,7 @@ def get_string(var_name, valid_values, saved_value):
 
     while True:
         try:
-            cmd = raw_input("Enter %s [%s]: " % (var_name, saved_value))
+            cmd = input("Enter %s [%s]: " % (var_name, saved_value))
             if cmd == '':
                 return saved_value
 

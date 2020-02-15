@@ -3,8 +3,8 @@ Description=blingServer service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python /home/pi/Documents/bling/blingServer/blingServer.py -s roboRIO-2706-FRC.local -l 32
-WorkingDirectory=/home/pi/Documents/bling/blingServer/
+ExecStart=/usr/bin/python /home/pi/git-repos/blingServer/blingServer.py -s roboRIO-2706-FRC.local -l 32
+WorkingDirectory=/home/pi/git-repos/blingServer/
 
 [Install]
 WantedBy=multi-user.target
