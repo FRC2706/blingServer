@@ -239,12 +239,12 @@ def doBling(data):
 
 def connectionListener(connected, info):
     logger.debug("%r ; Connected=%r" % (info, connected))
-    sd.putString("red", "255")
-    sd.putString("green", "255")
-    sd.putString("blue", "255")
-    sd.putString("iterations", "10")
-    sd.putString("wait_ms", "10")
-    sd.putString("LED_BRIGHTNESS", "128")
+    sd.putNumber("red", 255)
+    sd.putNumber("green", 255)
+    sd.putNumber("blue", 255)
+    sd.putNumber("repeat", 10)
+    sd.putNumber("wait_ms", 10)
+    sd.putNumber("LED_BRIGHTNESS", 128)
     sd.putString("command", "clear")
 
 
@@ -268,7 +268,7 @@ def handleBlingRequest(table, key, value, isNew):
     # command as a change
     sd.putString("command", "received")
 
-   # logger.debug("handling %r %r" % (command, color))
+    logger.debug("handling %r %r %r %r %r %r %r" % (command, red, green, blue, iterations, wait_ms, LED_BRIGHTNESS))
 
     if process and process.is_alive():
         logger.debug("handleBlingRequest: terminating doBling process")
@@ -279,7 +279,7 @@ def handleBlingRequest(table, key, value, isNew):
     process.daemon = True
     process.start()
 
-   # logger.debug("ending %r %r" % (command, color))
+    logger.debug("ending %r %r %r %r %r %r %r" % (command, red, green, blue, iterations, wait_ms, LED_BRIGHTNESS))
 
     # Let the roboRIO know we are done
     sd.putString("command", "processed")
